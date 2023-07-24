@@ -1,9 +1,13 @@
 package chatbot
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"net/http"
+	"os"
 )
 
 type webhookResponse struct {
@@ -17,8 +21,19 @@ type webhookRequest struct {
 
 func decodeWebhookRequest(ctx context.Context, r *http.Request) (interface{}, error) {
 	var req webhookRequest
+	var err error
 
-	err := json.NewDecoder(r.Body).Decode(&req)
+	// only for debug in local
+	if os.Getenv("ENV") == "local" {
+		bodyBytes, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			return nil, err
+		}
+		r.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
+		fmt.Println(string(bodyBytes))
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		return nil, err
 	}
