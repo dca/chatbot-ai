@@ -16,8 +16,8 @@ func MakeReciveWebhookEndpoint(srv LinebotService) endpoint.Endpoint {
 		req := request.(webhookRequest)
 		d, err := srv.ReciveWebhook(ctx, req.Message)
 		if err != nil {
-			return getResponse{d, err.Error()}, nil
+			return webhookResponse{d, err.Error()}, nil
 		}
-		return getResponse{d, ""}, nil
+		return webhookResponse{d, ""}, nil
 	}
 }
