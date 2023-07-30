@@ -6,8 +6,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
+
+	"github.com/line/line-bot-sdk-go/v7/linebot"
+	"github.com/spf13/viper"
 )
 
 type webhookResponse struct {
@@ -39,7 +43,6 @@ type webhookRequest struct {
 }
 
 func decodeWebhookRequest(ctx context.Context, r *http.Request) (interface{}, error) {
-	var req webhookRequest
 	var err error
 
 	// only for debug in local
@@ -52,11 +55,18 @@ func decodeWebhookRequest(ctx context.Context, r *http.Request) (interface{}, er
 		fmt.Println(string(bodyBytes))
 	}
 
-	err = json.NewDecoder(r.Body).Decode(&req)
+	lintSec := viper.GetString("LINE_CHANNEL_SECRET")
+	lintToken := viper.GetString("LINE_CHANNEL_TOKEN")
+	log.Println("token: ", lintSec, lintToken)
+
+	bot, err := linebot.New(viper.GetString("LINE_CHANNEL_SECRET"), viper.GetString("LINE_CHANNEL_TOKEN"))
+	events, err := bot.ParseRequest(r)
+
 	if err != nil {
+		log.Println("ParseRequest Error: ", err.Error())
 		return nil, err
 	}
-	return req, nil
+	return events, nil
 }
 
 func encodeWebhookResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {

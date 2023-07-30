@@ -33,7 +33,6 @@ func NewMessageService() MessageService {
 
 func sendMessageToOpenai(message string) (string, error) {
 	apikey := viper.GetString("OPENAI_API_KEY")
-	fmt.Printf("apikey: %s\n", apikey)
 
 	client := openai.NewClient(apikey)
 	resp, err := client.CreateChatCompletion(

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/go-kit/kit/endpoint"
+	"github.com/line/line-bot-sdk-go/v7/linebot"
 )
 
 type Endpoints struct {
@@ -12,9 +13,9 @@ type Endpoints struct {
 
 // MakeReciveWebhookEndpoint
 func MakeReciveWebhookEndpoint(srv LinebotService) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(webhookRequest)
-		d, errs := srv.ReciveWebhook(ctx, req)
+	return func(ctx context.Context, events interface{}) (interface{}, error) {
+
+		d, errs := srv.ReciveWebhook(ctx, events.([]*linebot.Event))
 		errStrings := make([]string, len(errs))
 		for i, err := range errs {
 			errStrings[i] = err.Error()

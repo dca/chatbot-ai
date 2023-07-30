@@ -10,10 +10,10 @@ import (
 type Config struct {
 	ChatbotPort string `mapstructure:"CHATBOT_PORT"`
 
-	OPENAI_API_KEY string `mapstructure:"OPENAI_API_KEY"`
+	OpenAiApiKey string `mapstructure:"OPENAI_API_KEY"`
 
-	LINE_APP_ID     string `mapstructure:"LINE_CHANNEL_ID"`
-	LINE_APP_SECERT string `mapstructure:"LINE_CHANNEL_TOKEN"`
+	LineChannelSecret string `mapstructure:"LINE_CHANNEL_SECRET"`
+	LineChannelToken  string `mapstructure:"LINE_CHANNEL_TOKEN"`
 }
 
 // LoadConfig creates a new Config struct
