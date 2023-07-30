@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "debug",
             "program": "${workspaceFolder}/cmd/chatbot/main.go",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/config.env"
         }
     ]
 }

@@ -2,18 +2,20 @@ package main
 
 import (
 	"context"
-	"flag"
 	"log"
 	"net/http"
 
 	"github.com/dca/chatbot-ai/internal/app/chatbot"
+	"github.com/dca/chatbot-ai/internal/pkg/config"
+	"github.com/spf13/viper"
 )
 
 func main() {
-	var (
-		httpAddr = flag.String("http", ":8080", "http listen address")
-	)
-	flag.Parse()
+	_, err := config.LoadConfig(".")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	ctx := context.Background()
 	srv := chatbot.NewLinebotService()
 	errChan := make(chan error)
@@ -23,9 +25,9 @@ func main() {
 	}
 
 	go func() {
-		log.Println("chatbot is listening on port:", *httpAddr)
+		log.Printf("chatbot is listening on port: %s", viper.GetString("CHATBOT_PORT"))
 		handler := chatbot.NewHttpServer(ctx, endpoints)
-		errChan <- http.ListenAndServe(*httpAddr, handler)
+		errChan <- http.ListenAndServe(viper.GetString("CHATBOT_PORT"), handler)
 	}()
 
 	log.Fatalln(<-errChan)
