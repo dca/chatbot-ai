@@ -14,10 +14,11 @@ type Endpoints struct {
 func MakeReciveWebhookEndpoint(srv LinebotService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(webhookRequest)
-		d, err := srv.ReciveWebhook(ctx, req.Message)
-		if err != nil {
-			return webhookResponse{d, err.Error()}, nil
+		d, errs := srv.ReciveWebhook(ctx, req)
+		errStrings := make([]string, len(errs))
+		for i, err := range errs {
+			errStrings[i] = err.Error()
 		}
-		return webhookResponse{d, ""}, nil
+		return webhookResponse{d, errStrings}, nil
 	}
 }

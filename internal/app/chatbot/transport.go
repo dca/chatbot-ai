@@ -11,12 +11,31 @@ import (
 )
 
 type webhookResponse struct {
-	Message string `json:"message"`
-	Err     string `json:"err,omitempty"`
+	Messages []string `json:"messages"`
+	Errs     []string `json:"errs,omitempty"`
 }
 
 type webhookRequest struct {
-	Message string `json:"message"`
+	Destination string `json:"destination"`
+	Events      []struct {
+		Type    string `json:"type"`
+		Message struct {
+			Type string `json:"type"`
+			ID   string `json:"id"`
+			Text string `json:"text"`
+		} `json:"message"`
+		WebhookEventId  string `json:"webhookEventId"`
+		DeliveryContext struct {
+			IsRedelivery bool `json:"isRedelivery"`
+		} `json:"deliveryContext"`
+		Timestamp int64 `json:"timestamp"`
+		Source    struct {
+			Type   string `json:"type"`
+			UserID string `json:"userId"`
+		} `json:"source"`
+		ReplyToken string `json:"replyToken"`
+		Mode       string `json:"mode"`
+	} `json:"events"`
 }
 
 func decodeWebhookRequest(ctx context.Context, r *http.Request) (interface{}, error) {

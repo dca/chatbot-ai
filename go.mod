@@ -27,5 +27,6 @@ require (
 require (
 	github.com/go-kit/log v0.2.0 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
+	github.com/sashabaranov/go-openai v1.14.1
 	github.com/spf13/viper v1.16.0
 )
